@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import { HTTP_STATUSES } from '../helpers/HttpStatuses';
 import { CreateNoteModel } from '../helpers/models/CreateNoteModel';
+import { StatsViewModel } from '../helpers/models/StatsViewModel';
 import { NoteViewModel } from '../helpers/models/NoteViewModel';
 import { UpdateNoteModel } from '../helpers/models/UpdateNoteModel';
 import { URIParamsNoteIdModel } from '../helpers/models/URIParamsNoteIdModel';
-import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody } from '../helpers/types';
-import { db, NoteType } from '../repositories/DBNotes';
+import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody } from '../helpers/typesRequest';
+import { db } from '../repositories/DBNotes';
 import { DeleteNote } from '../repositories/DeleteNote';
 import { UpdateNote } from '../repositories/UpdateNote';
 import { AddNote } from '../repositories/AddNote';
@@ -20,10 +21,10 @@ const readAllNotes = (req: Request, res: Response<NoteViewModel[]>) => {
 };
 
 
-const readNotesStats = (req: Request, res: Response<NoteViewModel[]>) => {
+const readNotesStats = (req: Request, res: Response<StatsViewModel>) => {
     res
         .status(HTTP_STATUSES.OK_200)
-        .json(db.notes);
+        .json({summary: db.notes.length});
 };
 
 const readNote = (req: RequestWithParams<URIParamsNoteIdModel>, res: Response<NoteViewModel>) => {
@@ -41,12 +42,6 @@ const readNote = (req: RequestWithParams<URIParamsNoteIdModel>, res: Response<No
 const createNote = (req: RequestWithBody<CreateNoteModel>, res: Response<NoteViewModel>) => {
 
     if(!req.body.title && !req.body.category && !req.body.content) {
-
-        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
-        return;
-    }
-
-    if(!(typeof(req.body.title) == 'string')) {
 
         res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
         return;

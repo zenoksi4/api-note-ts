@@ -1,5 +1,5 @@
 import { HTTP_STATUSES } from "../helpers/HttpStatuses";
-import { db, NoteType } from "./DBNotes";
+import { db } from "./DBNotes";
 
 type UpdateNoteType = {
     title?: string,
