@@ -5,7 +5,7 @@ services:
     ports:
       - 3000:3000
 
-  postgre:
+  pg_db:
     container_name: postgreports
     ports:
       - "5432:5432"
@@ -13,3 +13,17 @@ services:
       - POSTGRES_PASSWORD=root
       - POSTGRES_USER=admin
     image: postgres:15.3
+    volumes:
+      - pg_db_vol:/var/lib/postgresql/data/
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: noemail@noemail.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+
+volumes:
+  pg_db_vol: {}
