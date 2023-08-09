@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SchemasUpdate = exports.SchemasCreate = exports.ValidateYup = void 0;
+exports.SchemasCreateExtraFields = exports.SchemasUpdateExtraFields = exports.SchemasUpdate = exports.SchemasCreate = exports.ValidateYup = void 0;
 const yup_1 = require("yup");
 const ValidateYup = (schema) => {
     return (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -29,14 +29,30 @@ exports.ValidateYup = ValidateYup;
 exports.SchemasCreate = {
     data: (0, yup_1.object)().shape({
         title: (0, yup_1.string)().required(),
-        category: (0, yup_1.mixed)().oneOf(['Task', 'Idea', 'Random Thought']),
+        category: (0, yup_1.mixed)().oneOf(["Task", "Idea", "Random Thought"]),
         content: (0, yup_1.string)().required(),
-    })
+    }),
 };
 exports.SchemasUpdate = {
     data: (0, yup_1.object)().shape({
         title: (0, yup_1.string)().optional(),
-        category: (0, yup_1.mixed)().oneOf(['Task', 'Idea', 'Random Thought']).optional(),
+        category: (0, yup_1.mixed)().oneOf(["Task", "Idea", "Random Thought"]).optional(),
         content: (0, yup_1.string)().optional(),
-    })
+    }),
+};
+exports.SchemasUpdateExtraFields = {
+    data: exports.SchemasUpdate.data.test("extraFields", "Extra fields found", (value) => {
+        const allowedFields = Object.keys(exports.SchemasCreate.data.fields);
+        const receivedFields = Object.keys(value);
+        const extraFields = receivedFields.filter((field) => !allowedFields.includes(field));
+        return extraFields.length === 0;
+    }),
+};
+exports.SchemasCreateExtraFields = {
+    data: exports.SchemasCreate.data.test("extraFields", "Extra fields found", (value) => {
+        const allowedFields = Object.keys(exports.SchemasCreate.data.fields);
+        const receivedFields = Object.keys(value);
+        const extraFields = receivedFields.filter((field) => !allowedFields.includes(field));
+        return extraFields.length === 0;
+    }),
 };
