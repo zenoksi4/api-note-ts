@@ -1,22 +1,19 @@
-import { db, NoteType } from "./DBNotes";
+import { Note } from "../helpers/models/TaskModel";
 
 type AddNoteType = {
-    title: string,
-    category: string,
-    content: string,
-}
+  title: string;
+  category: string;
+  content: string;
+};
 
+export const AddNote = async (addNote: AddNoteType) => {
+  const { title, category, content } = addNote;
 
-
-export const AddNote = (addNote : AddNoteType) => {
-    const newNote: NoteType = {
-        id: Math.random().toString(),
-        title: addNote.title,
-        created: new Date().toLocaleDateString('uk'),
-        category: addNote.category,
-        content: addNote.content,
-    }
-
-    db.notes.push(newNote);
-    return newNote;
-}
+  return await Note.create({
+    title,
+    category,
+    content,
+    CreatedAt: new Date(),
+    UpdatedAt: new Date(),
+  });
+};

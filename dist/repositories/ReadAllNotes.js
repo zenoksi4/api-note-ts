@@ -9,17 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeleteNote = void 0;
-const HttpStatuses_1 = require("../helpers/HttpStatuses");
+exports.ReadAllNotes = void 0;
 const TaskModel_1 = require("../helpers/models/TaskModel");
-const DeleteNote = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const note = yield TaskModel_1.Note.findByPk(id);
-    if (note) {
-        yield note.destroy();
-        return HttpStatuses_1.HTTP_STATUSES.NO_CONTENT_204;
-    }
-    else {
-        return HttpStatuses_1.HTTP_STATUSES.NOT_FOUND_404;
-    }
+const ReadAllNotes = () => __awaiter(void 0, void 0, void 0, function* () {
+    const notes = yield TaskModel_1.Note.findAll();
+    return notes;
 });
-exports.DeleteNote = DeleteNote;
+exports.ReadAllNotes = ReadAllNotes;

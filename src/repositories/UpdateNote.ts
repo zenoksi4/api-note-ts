@@ -1,33 +1,17 @@
-import { HTTP_STATUSES } from "../helpers/HttpStatuses";
-import { db } from "./DBNotes";
+import { Note } from "../helpers/models/TaskModel";
 
 type UpdateNoteType = {
-    title?: string,
-    category?: string,
-    content?: string,
-}
+  title?: string;
+  category?: string;
+  content?: string;
+};
 
+export const UpdateNote = async (updateData: UpdateNoteType, id: string) => {
+  const note = await Note.findByPk(id);
 
-
-export const UpdateNote = (updateData : UpdateNoteType, id:string):object | number => {
-    const foundNotes = db.notes.find(c => c.id === id)
-    if (!foundNotes) {
-        return HTTP_STATUSES.NOT_FOUND_404;
-
-    }
-
-    if(updateData.title){
-        foundNotes.title = updateData.title;
-    }
-
-    if(updateData.category){
-        foundNotes.category = updateData.category;
-    }
-
-    if(updateData.content){
-        foundNotes.content = updateData.content;
-    }
-
-    return foundNotes;
-    
-}
+  if (note) {
+    return await note.update(updateData);
+  } else {
+    return null;
+  }
+};
